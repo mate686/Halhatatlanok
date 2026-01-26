@@ -1,0 +1,22 @@
+﻿@model List<Tag> 
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h2>Sorolja fel ábécérendben lekérdezés segítségével a 2022-ben kitüntetettek nevét!</h2>
+
+
+<table>
+
+@foreach(Tag t in Model)
+{
+    <tr>
+        <td>@t.Nev</td>
+        <td>@t.Ev</td>
+    </tr>
+}
+
+</table>
+
