@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Halhatatlanok.Migrations
 {
     [DbContext(typeof(HalhatatlanContext))]
-    [Migration("20260126123022_javit")]
-    partial class javit
+    [Migration("20260126123526_elso")]
+    partial class elso
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

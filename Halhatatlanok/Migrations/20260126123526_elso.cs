@@ -6,7 +6,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Halhatatlanok.Migrations
 {
     /// <inheritdoc />
-    public partial class masodik : Migration
+    public partial class elso : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,15 +35,15 @@ namespace Halhatatlanok.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Ev = table.Column<int>(type: "int", nullable: false),
-                    KatidId = table.Column<int>(type: "int", nullable: false),
+                    KategoriaId = table.Column<int>(type: "int", nullable: false),
                     Nev = table.Column<string>(type: "longtext", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tagok", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tagok_Kategoriak_KatidId",
-                        column: x => x.KatidId,
+                        name: "FK_Tagok_Kategoriak_KategoriaId",
+                        column: x => x.KategoriaId,
                         principalTable: "Kategoriak",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -51,9 +51,9 @@ namespace Halhatatlanok.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tagok_KatidId",
+                name: "IX_Tagok_KategoriaId",
                 table: "Tagok",
-                column: "KatidId");
+                column: "KategoriaId");
         }
 
         /// <inheritdoc />
