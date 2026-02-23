@@ -1,4 +1,7 @@
-﻿@*
+﻿
+﻿@using Halhatatlanok.ViewModels
+@model List<Feladat6Model>
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -8,3 +11,15 @@
     <Sorolja fel lekérdezés segítségével „Zenthe Ferenc” színésszel együtt azoknak a nevét és
              foglalkozását, akik vele azonos évben kapták a díjat!
 </h2>
+
+<table>
+
+    @foreach (Feladat6Model d in Model)
+    {
+        <tr>
+            <td>@d.Foglalkozas</td>
+            <td>@d.Nev</td>
+            <td>@d.Ev</td>
+        </tr>
+    }
+</table>

@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Halhatatlanok.Data;
+using Halhatatlanok.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Halhatatlanok.Data;
-using Halhatatlanok.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Halhatatlanok.Controllers
 {
@@ -20,7 +22,7 @@ namespace Halhatatlanok.Controllers
         }
 
 
-        public async Task<IActionResult> Index(string? nev)
+        public async Task<IActionResult> Index(string? nev, int page = 1, string sort = "nev", string dir = "asc")
         {
             var kategotiak = _context.Kategoriak.AsQueryable();
            
@@ -30,7 +32,40 @@ namespace Halhatatlanok.Controllers
                 .Where(p => p.Nev!.ToLower().Contains(nev.ToLower()));
                 ViewData["AktualisNev"] = nev;
             }
-            return View(await kategotiak.ToListAsync());
+            kategotiak = (sort, dir) switch
+            {
+
+                ("nev", "asc") => kategotiak.OrderBy(p => p.Nev),
+
+                ("nev", "desc") => kategotiak.OrderByDescending(p => p.Nev),
+      
+            };
+
+
+            ViewData["CurrentSort"] = sort;
+
+            ViewData["CurrentDir"] = dir;
+
+            int pageSize = 10; // ennyi elem egy oldalon
+
+
+            int totalCount = await kategotiak.CountAsync();
+
+            var items = await kategotiak
+            //.OrderBy(p => p.Nev) // ⚠️ lapozásnál KÖTELEZŐ rendezni
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+
+            ViewData["CurrentPage"] = page;
+
+            ViewData["TotalPages"] = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            ViewData["TotalCount"] = totalCount;
+
+
+            return View(items);
         }
 
 

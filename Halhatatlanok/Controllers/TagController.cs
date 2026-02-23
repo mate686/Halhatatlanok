@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Halhatatlanok.Data;
+using Halhatatlanok.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Halhatatlanok.Data;
-using Halhatatlanok.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Halhatatlanok.Controllers
 {
@@ -19,7 +21,7 @@ namespace Halhatatlanok.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(string? ev,string? nev)
+        public async Task<IActionResult> Index(string? ev,string? nev,int page = 1, string sort = "nev", string dir = "asc")
         {
             var tagok = _context.Tagok.AsQueryable();
 
@@ -36,7 +38,48 @@ namespace Halhatatlanok.Controllers
                 .Where(p => p.Nev!.ToLower().Contains(nev.ToLower()));
                 ViewData["AktualisNev"] = nev;
             }
-            return View(await tagok.ToListAsync());
+            tagok = (sort, dir) switch
+            {
+
+                ("nev", "asc") => tagok.OrderBy(p => p.Nev),
+
+                ("nev", "desc") => tagok.OrderByDescending(p => p.Nev),
+
+                ("ev", "asc") => tagok.OrderBy(p => p.Ev),
+
+                ("ev", "desc") => tagok.OrderByDescending(p => p.Ev),
+
+                //("kategoria", "asc") => tagok.OrderBy(p => p.Kategoria),
+
+                //("kategoria", "desc") => tagok.OrderByDescending(p => p.Kategoria),
+
+            };
+
+
+            ViewData["CurrentSort"] = sort;
+
+            ViewData["CurrentDir"] = dir;
+
+            int pageSize = 10; // ennyi elem egy oldalon
+
+
+            int totalCount = await tagok.CountAsync();
+
+            var items = await tagok
+            //.OrderBy(p => p.Nev) // ⚠️ lapozásnál KÖTELEZŐ rendezni
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+
+            ViewData["CurrentPage"] = page;
+
+            ViewData["TotalPages"] = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            ViewData["TotalCount"] = totalCount;
+
+
+            return View(items);
         }
 
         // GET: Tag/Details/5

@@ -2,13 +2,42 @@
 
 @{
     ViewData["Title"] = "Index";
+    int currentPage = (int)ViewData["CurrentPage"]!;
+    int totalPages = (int)ViewData["TotalPages"]!;
+    int totalCount = (int)ViewData["TotalCount"]!;
+    string ToggleDir(string column)
+
+    => (ViewData["CurrentSort"]?.ToString() == column &&
+
+    ViewData["CurrentDir"]?.ToString() == "asc")
+
+    ? "desc"
+
+    : "asc";
+
+    string SortIcon(string column)
+    {
+        if (ViewData["CurrentSort"]?.ToString() != column)
+            return "";
+        return ViewData["CurrentDir"]?.ToString() == "asc"
+        ? " ▲"
+        : " ▼";
+
+    }
 }
 
 <h1>Index</h1>
 
-<p>
+@* <p>
     <a asp-action="Create">Create New</a>
-</p>
+</p> *@
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+
 
 <form asp-action="Index" method="get">
     <p>
@@ -18,11 +47,62 @@
     </p>
 </form>
 
+<nav>
+    <ul class="pagination">
+
+        @if (currentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(currentPage - 1)"
+                   asp-route-nev="@ViewData["AktualisNev"]">
+                    Előző
+                </a>
+            </li>
+        }
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link"
+                   asp-route-sort="@ViewData["CurrentSort"]"
+                   asp-route-dir="@ViewData["CurrentDir"]"
+                   asp-action="Index"
+                   asp-route-page="@i"
+                   asp-route-nev="@ViewData["AktualisNev"]">
+                    @i
+                </a>
+            </li>
+        }
+
+
+        @if (currentPage < totalPages)
+
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(currentPage + 1)"
+                   asp-route-nev="@ViewData["AktualisNev"]">
+                    Következő
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nev)
+                <a asp-action="Index"
+                   asp-route-page="@currentPage"
+                   asp-route-nev="@ViewData["AktualisNev"]"
+                   asp-route-sort="nev"
+                   asp-route-dir="@ToggleDir("nev")">
+
+                    @Html.DisplayNameFor(model => model.Nev) @SortIcon("nev")
+                </a>
             </th>
             <th></th>
         </tr>
@@ -34,9 +114,17 @@
                 @Html.DisplayFor(modelItem => item.Nev)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
+                    @* @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item?.Id">Edit</a>
+                        <span> | </span>
+                    } *@
+
+                    <partial name="_CrudLinks" model="@item.Id" />
+
             </td>
         </tr>
 }

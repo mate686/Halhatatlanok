@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Halhatatlanok/Data/identity.db
+/Halhatatlanok/Data/identity.db-shm
+/Halhatatlanok/Data/identity.db-wal
