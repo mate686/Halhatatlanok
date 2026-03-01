@@ -1,5 +1,6 @@
 ﻿using Halhatatlanok.Data;
 using Halhatatlanok.Models;
+using Halhatatlanok.Services;
 using Halhatatlanok.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,12 @@ namespace Halhatatlanok.Controllers
     public class FeladatController : Controller
     {
         private HalhatatlanContext _conn;
+        private ILekerdezesiFeladatok _queries;
 
-        public FeladatController(HalhatatlanContext conn)
+        public FeladatController(HalhatatlanContext conn, ILekerdezesiFeladatok queries)
         {
             _conn = conn;
+            _queries = queries;
         }
 
         public IActionResult Index()
@@ -22,31 +25,32 @@ namespace Halhatatlanok.Controllers
 
         public IActionResult Feladat2()
         {
-            List<Tag> tagok = new List<Tag>(_conn.Tagok.Where(x => x.Ev == 2022).OrderBy(x => x.Nev).ToList());
+            //List<Tag> tagok = new List<Tag>(_conn.Tagok.Where(x => x.Ev == 2022).OrderBy(x => x.Nev).ToList());
 
-           
+           var result = _queries.Feladat2();
 
-            return View(tagok);
+            return View(result);
         }
 
         public IActionResult Feladat3()
         {
-            List<Foglalkozas> szineszek = _conn.Tagok
+            /*List<Foglalkozas> szineszek = _conn.Tagok
             .Where(t => t.Kategoria.Nev.Contains("színész"))
             .Select(t => new Foglalkozas
             {
                 Nev = t.Nev,
                 FoglalkozasMeg = t.Kategoria.Nev
             })
-            .ToList();
+            .ToList();*/
 
+            var result = _queries.Feladat3();
 
-            return View(szineszek);
+            return View(result);
         }
 
         public IActionResult Feladat4()
         {
-           Dictionary<int, int> szotar = new Dictionary<int, int>(_conn.Tagok.GroupBy(k => k.Ev).ToDictionary(
+           /*Dictionary<int, int> szotar = new Dictionary<int, int>(_conn.Tagok.GroupBy(k => k.Ev).ToDictionary(
                t => t.Key,
                t => t.Count()
                ));
@@ -57,9 +61,10 @@ namespace Halhatatlanok.Controllers
                 {
                     szotar.Remove(k.Key);
                 }
-            }
+            }*/
+             var szotar = _queries.Feladat4();
 
-           
+
 
             return View(szotar);
         }
@@ -82,32 +87,31 @@ namespace Halhatatlanok.Controllers
                 t => t.Count()
                 );*/
 
-            List<Feladat5Model> lista = new List<Feladat5Model> (_conn.Tagok.GroupBy(k => k.Kategoria.Nev).Select(t => new Feladat5Model
+            /*List<Feladat5Model> lista = new List<Feladat5Model> (_conn.Tagok.GroupBy(k => k.Kategoria.Nev).Select(t => new Feladat5Model
             {
                 FoglalkozasNeve = t.Key,
                 DB = t.Count()
-            }));
+            }));*/
+
+            var lista = _queries.Feladat5();
 
             return View(lista);
         }
 
         public IActionResult Feladat6()
         {
-<<<<<<< HEAD
-            int ev = _conn.Tagok.Where(t => t.Nev == "Zenthe Ferenc").Select(t => t.Ev).FirstOrDefault();
 
-            List<Feladat6Model> lista = new List<Feladat6Model>(_conn.Tagok.Where(t => t.Ev == ev).Select(t =>
-=======
-            int ev = _conn.Tagok.Where(t => t.Nev == "Zenthe Ferenc").Select(t=> t.Ev).FirstOrDefault();
+            /*int ev = _conn.Tagok.Where(t => t.Nev == "Zenthe Ferenc").Select(t => t.Ev).FirstOrDefault();
+
 
             List<Feladat6Model> lista = new List<Feladat6Model>(_conn.Tagok.Where(t => t.Ev == ev).Select(t => 
->>>>>>> 017e2ad6286c4a30b3e42f459bf70d3529153df4
             new Feladat6Model
             {
                 Foglalkozas = t.Kategoria.Nev,
                 Nev = t.Nev,
                 Ev = t.Ev
-            }));
+            }));*/
+             var lista = _queries.Feladat6();
 
             return View(lista);
         }

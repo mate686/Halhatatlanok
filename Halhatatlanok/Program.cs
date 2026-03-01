@@ -1,6 +1,7 @@
 using Halhatatlanok.Data;
-using Microsoft.EntityFrameworkCore;
+using Halhatatlanok.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
 
+
+
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -23,6 +26,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 
 builder.Services.AddRazorPages();
 
+builder.Services.AddScoped<ILekerdezesiFeladatok, LekerdezesiFeladatok>();
 
 var app = builder.Build();
 

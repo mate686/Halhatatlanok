@@ -1,0 +1,36 @@
+﻿using Halhatatlanok.Models;
+using Halhatatlanok.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Halhatalanok.Test.Queries
+{
+    public class Feladat3Test
+    {
+        [Fact]
+        public void Feladat3_Teszt()
+        {
+            var context = TestDbFactory.CreateContext(nameof(Feladat3_Teszt));
+
+            var szinesz = new Kategoria { Nev = "színész" };
+            var iro = new Kategoria { Nev = "író" };
+
+            context.Tagok.AddRange(
+                new Tag { Nev = "Bodrogi Gyula", Kategoria = szinesz },
+                new Tag { Nev = "Zenthe Ferenc", Kategoria = szinesz },
+                new Tag { Nev = "Gárdonyi Géza", Kategoria = iro }
+            );
+            context.SaveChanges();
+
+            var service = new LekerdezesiFeladatok(context);
+
+            var result = service.Feladat3();
+
+            Assert.Equal(2, result.Count);
+            Assert.All(result, x => Assert.Contains("színész", x.FoglalkozasMeg));
+        }
+    }
+}
