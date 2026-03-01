@@ -101,10 +101,17 @@ namespace Halhatatlanok.Controllers
         public IActionResult Feladat6()
         {
 
+<<<<<<< HEAD
             /*int ev = _conn.Tagok.Where(t => t.Nev == "Zenthe Ferenc").Select(t => t.Ev).FirstOrDefault();
 
 
             List<Feladat6Model> lista = new List<Feladat6Model>(_conn.Tagok.Where(t => t.Ev == ev).Select(t => 
+=======
+            int ev = _conn.Tagok.Where(t => t.Nev == "Zenthe Ferenc").Select(t=> t.Ev).FirstOrDefault();
+
+            List<Feladat6Model> lista = new List<Feladat6Model>(_conn.Tagok.Where(t => t.Ev == ev).Select(t => 
+
+>>>>>>> 648099a5d7cef17714c5b531255a43e27b42c3da
             new Feladat6Model
             {
                 Foglalkozas = t.Kategoria.Nev,
