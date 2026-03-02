@@ -1,0 +1,23 @@
+﻿@model Dictionary<int,int>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<h2>
+    Mely években kapták meg a díjat nyolcnál többen? Lekérdezés segítségével jelenítse meg
+    ezeket az éveket és a díjazottak számát!
+</h2>
+
+<table>
+
+    @foreach (var d in Model)
+    {
+        <tr>
+            <td>@d.Key</td>
+            <td>@d.Value</td>
+        </tr>
+    }
+</table>
